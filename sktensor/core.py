@@ -30,7 +30,7 @@ def modulefunction(func):
     module_funs.append(func.__name__)
 
 
-class tensor_mixin(object):
+class tensor_mixin:
     """
     Base tensor class from which all tensor classes are subclasses.
     Can not be instaniated

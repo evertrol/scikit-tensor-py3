@@ -23,7 +23,7 @@ __all__ = [
 ]
 
 
-class ktensor(object):
+class ktensor:
     """
     Tensor stored in decomposed form as a Kruskal operator.
 
@@ -183,7 +183,7 @@ class ktensor(object):
         return vectorized_ktensor(v, self.shape, self.lmbda)
 
 
-class vectorized_ktensor(object):
+class vectorized_ktensor:
 
     def __init__(self, v, shape, lmbda):
         self.v = v
