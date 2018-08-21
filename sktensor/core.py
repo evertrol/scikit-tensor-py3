@@ -98,7 +98,7 @@ class tensor_mixin:
                 Y = Y._ttm_compute(V[vidx[i]], dims[i], transp)
         return Y
 
-    def ttv(self, v, modes=[], without=False):
+    def ttv(self, v, modes=None, without=False):
         """
         Tensor times vector product
 
@@ -113,6 +113,8 @@ class tensor_mixin:
             modes specified in ``modes``.
 
         """
+        if modes is None:
+            modes = []
         if not isinstance(v, tuple):
             v = (v, )
         dims, vidx = check_multiplication_dims(modes, self.ndim, len(v), vidx=True, without=without)
