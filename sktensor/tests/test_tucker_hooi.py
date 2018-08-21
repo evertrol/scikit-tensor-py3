@@ -5,7 +5,6 @@ from sktensor.dtensor import dtensor, unfolded_dtensor
 from sktensor.sptensor import unfolded_sptensor
 #from sktensor.rotation import orthomax
 
-logging.basicConfig(level=logging.INFO)
 
 
 def normalize(X):
