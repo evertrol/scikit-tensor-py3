@@ -99,7 +99,7 @@ def asalsan(X, rank, **kwargs):
     #normX = norm(X)**2
     fit = fitold = f = fitchange = 0
     exectimes = []
-    for iters in xrange(maxIter):
+    for iters in range(maxIter):
         tic = time.clock()
         fitold = fit
         A = __updateA(X, A, D, R, nne)
@@ -114,7 +114,7 @@ def asalsan(X, rank, **kwargs):
 
         # compute fit
         f = 0
-        for i in xrange(len(X)):
+        for i in range(len(X)):
             AD = dot(A, diag(D[i, :]))
             M = dot(dot(AD, R), AD.T)
             f += normX[i] + norm(M) ** 2 - 2 * Xflat[i].dot(M.flatten())

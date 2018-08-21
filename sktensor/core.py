@@ -98,7 +98,7 @@ class tensor_mixin(object):
         elif is_sequence(V):
             dims, vidx = check_multiplication_dims(mode, self.ndim, len(V), vidx=True, without=without)
             Y = self._ttm_compute(V[vidx[0]], dims[0], transp)
-            for i in xrange(1, len(dims)):
+            for i in range(1, len(dims)):
                 Y = Y._ttm_compute(V[vidx[i]], dims[i], transp)
         return Y
 
