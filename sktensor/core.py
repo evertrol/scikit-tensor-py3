@@ -14,17 +14,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import numpy as np
-from numpy import array, dot, zeros, ones, arange, kron
-from numpy import setdiff1d
 from scipy.linalg import eigh
 from scipy.sparse import issparse as issparse_mat
 from scipy.sparse import csr_matrix
 from scipy.sparse.linalg import eigsh
-from abc import ABCMeta, abstractmethod
-#from coremod import khatrirao
-
 import sys
 import types
+import abc
 from collections.abc import Sequence
 
 module_funs = []
@@ -45,7 +41,7 @@ class tensor_mixin(object):
     sktensor.sptensor : Subclass for *sparse* tensors.
     """
 
-    __metaclass__ = ABCMeta
+    __metaclass__ = abc.ABCMeta
 
     def ttm(self, V, mode=None, transp=False, without=False):
         """
@@ -71,23 +67,23 @@ class tensor_mixin(object):
         --------
         Create dense tensor
 
-        >>> T = zeros((3, 4, 2))
+        >>> T = np.zeros((3, 4, 2))
         >>> T[:, :, 0] = [[ 1,  4,  7, 10], [ 2,  5,  8, 11], [3,  6,  9, 12]]
         >>> T[:, :, 1] = [[13, 16, 19, 22], [14, 17, 20, 23], [15, 18, 21, 24]]
         >>> T = dtensor(T)
 
         Create matrix
 
-        >>> V = array([[1, 3, 5], [2, 4, 6]])
+        >>> V = np.array([[1, 3, 5], [2, 4, 6]])
 
         Multiply tensor with matrix along mode 0
 
         >>> Y = T.ttm(V, 0)
         >>> Y[:, :, 0]
-        array([[  22.,   49.,   76.,  103.],
+        np.array([[  22.,   49.,   76.,  103.],
             [  28.,   64.,  100.,  136.]])
         >>> Y[:, :, 1]
-        array([[ 130.,  157.,  184.,  211.],
+        np.array([[ 130.,  157.,  184.,  211.],
             [ 172.,  208.,  244.,  280.]])
 
         """
@@ -126,23 +122,23 @@ class tensor_mixin(object):
         remdims = np.setdiff1d(range(self.ndim), dims)
         return self._ttv_compute(v, dims, vidx, remdims)
 
-    #@abstractmethod
+    #@abc.abstractmethod
     #def ttt(self, other, modes=None):
     #    pass
 
-    @abstractmethod
+    @abc.abstractmethod
     def _ttm_compute(self, V, mode, transp):
         pass
 
-    @abstractmethod
+    @abc.abstractmethod
     def _ttv_compute(self, v, dims, vidx, remdims):
         pass
 
-    @abstractmethod
+    @abc.abstractmethod
     def unfold(self, rdims, cdims=None, transp=False):
         pass
 
-    @abstractmethod
+    @abc.abstractmethod
     def uttkrp(self, U, mode):
         """
         Unfolded tensor times Khatri-Rao product:
@@ -182,7 +178,7 @@ class tensor_mixin(object):
         """
         pass
 
-    @abstractmethod
+    @abc.abstractmethod
     def transpose(self, axes=None):
         """
         Compute transpose of tensors.
@@ -241,12 +237,12 @@ for fname in conv_funcs:
 
 
 def check_multiplication_dims(dims, N, M, vidx=False, without=False):
-    dims = array(dims, ndmin=1)
+    dims = np.array(dims, ndmin=1)
     if len(dims) == 0:
-        dims = arange(N)
+        dims = np.arange(N)
     if without:
-        dims = setdiff1d(range(N), dims)
-    if not np.in1d(dims, arange(N)).all():
+        dims = np.setdiff1d(range(N), dims)
+    if not np.in1d(dims, np.arange(N)).all():
         raise ValueError('Invalid dimensions')
     P = len(dims)
     sidx = np.argsort(dims)
@@ -269,7 +265,7 @@ def innerprod(X, Y):
     """
     Inner prodcut with a Tensor
     """
-    return dot(X.flatten(), Y.flatten())
+    return np.dot(X.flatten(), Y.flatten())
 
 
 def nvecs(X, n, rank, do_flipsign=True, dtype=np.float):
@@ -287,7 +283,7 @@ def nvecs(X, n, rank, do_flipsign=True, dtype=np.float):
         _, U = eigh(Y, eigvals=(N - rank, N - 1))
         #_, U = eigsh(Y, rank, which='LM')
     # reverse order of eigenvectors such that eigenvalues are decreasing
-    U = array(U[:, ::-1])
+    U = np.array(U[:, ::-1])
     # flip sign
     if do_flipsign:
         U = flipsign(U)
@@ -310,7 +306,7 @@ def center(X, n):
     Xn = unfold(X, n)
     N = Xn.shape[0]
     m = Xn.sum(axis=0) / N
-    m = kron(m, ones((N, 1)))
+    m = np.kron(m, np.ones((N, 1)))
     Xn = Xn - m
     return fold(Xn, n)
 
@@ -365,7 +361,7 @@ def khatrirao(A, reverse=False):
         elif N != A[i].shape[1]:
             raise ValueError('All matrices must have same number of columns')
         M *= A[i].shape[0]
-    matorder = arange(len(A))
+    matorder = np.arange(len(A))
     if reverse:
         matorder = matorder[::-1]
     # preallocate
@@ -382,26 +378,26 @@ def teneye(dim, order):
     """
     Create tensor with superdiagonal all one, rest zeros
     """
-    I = zeros(dim ** order)
+    I = np.zeros(dim ** order)
     for f in range(dim):
         idd = f
         for i in range(1, order):
             idd = idd + dim ** (i - 1) * (f - 1)
         I[idd] = 1
-    return I.reshape(ones(order) * dim)
+    return I.reshape(np.ones(order) * dim)
 
 
 def tvecmat(m, n):
     d = m * n
-    i2 = arange(d).reshape(m, n).T.flatten()
-    Tmn = zeros((d, d))
-    Tmn[arange(d), i2] = 1
+    i2 = np.arange(d).reshape(m, n).T.flatten()
+    Tmn = np.zeros((d, d))
+    Tmn[np.arange(d), i2] = 1
     return Tmn
 
-    #i = arange(d);
+    #i = np.arange(d);
     #rI = m * (i-1)-(m*n-1) * floor((i-1)/n)
     #print rI
-    #I1s = s2i((d,d), rI, arange(d))
+    #I1s = s2i((d,d), rI, np.arange(d))
     #print I1s
     #Tmn[I1s] = 1
     #return Tmn.reshape((d,d)).T

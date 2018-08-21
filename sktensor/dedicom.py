@@ -16,10 +16,7 @@
 import logging
 import time
 import numpy as np
-from numpy import dot, ones, zeros, diag, kron, outer, array, prod, eye
-from numpy.linalg import norm, solve, eigvals
-from numpy.random import rand
-from scipy.linalg import qr
+import scipy.linalg
 from scipy.sparse.linalg import eigsh
 from scipy.optimize import fmin_l_bfgs_b, fmin_ncg, fmin_tnc
 from scipy.sparse import issparse
@@ -61,15 +58,15 @@ def asalsan(X, rank, **kwargs):
         raise BaseException('Unknown keywords (%s)' % (kwargs.keys()))
 
     # init starting points
-    D = ones((len(X), rank))
+    D = np.ones((len(X), rank))
     sz = X[0].shape
     n = sz[0]
-    R = rand(rank, rank)
+    R = np.random.rand(rank, rank)
     if ainit == 'random':
-        A = rand(n, rank)
+        A = np.random.rand(n, rank)
     elif ainit == 'nvecs':
-        S = zeros((n, n))
-        T = zeros((n, n))
+        S = np.zeros((n, n))
+        T = np.zeros((n, n))
         for i in range(len(X)):
             T = X[i]
             S = S + T + T.T
@@ -77,7 +74,7 @@ def asalsan(X, rank, **kwargs):
         if nne > 0:
             A[A < 0] = 0
         if proj:
-            Q, A2 = qr(A)
+            Q, A2 = scipy.linalg.qr(A)
             X2 = __projectSlices(X, Q)
             R = __updateR(X2, A2, D, R, nne)
         else:
@@ -89,14 +86,14 @@ def asalsan(X, rank, **kwargs):
 
     # perform decomposition
     if issparse(X[0]):
-        normX = [norm(M.data) ** 2 for M in X]
-        Xflat = [M.tolil().reshape((1, prod(M.shape))).tocsr() for M in X]
+        normX = [np.linalg.norm(M.data) ** 2 for M in X]
+        Xflat = [M.tolil().reshape((1, np.prod(M.shape))).tocsr() for M in X]
     else:
-        normX = [norm(M) ** 2 for M in X]
+        normX = [np.linalg.norm(M) ** 2 for M in X]
         Xflat = [M.flatten() for M in X]
-    M = zeros((n, n))
+    M = np.zeros((n, n))
     normXSum = sum(normX)
-    #normX = norm(X)**2
+    #normX = np.linalg.norm(X)**2
     fit = fitold = f = fitchange = 0
     exectimes = []
     for iters in range(maxIter):
@@ -104,7 +101,7 @@ def asalsan(X, rank, **kwargs):
         fitold = fit
         A = __updateA(X, A, D, R, nne)
         if proj:
-            Q, A2 = qr(A)
+            Q, A2 = scipy.linalg.qr(A)
             X2 = __projectSlices(X, Q)
             R = __updateR(X2, A2, D, R, nne)
             D, f = __updateD(X2, A2, D, R, nne, optfunc)
@@ -115,9 +112,9 @@ def asalsan(X, rank, **kwargs):
         # compute fit
         f = 0
         for i in range(len(X)):
-            AD = dot(A, diag(D[i, :]))
-            M = dot(dot(AD, R), AD.T)
-            f += normX[i] + norm(M) ** 2 - 2 * Xflat[i].dot(M.flatten())
+            AD = np.dot(A, np.diag(D[i, :]))
+            M = np.dot(np.dot(AD, R), AD.T)
+            f += normX[i] + np.linalg.norm(M) ** 2 - 2 * Xflat[i].dot(M.flatten())
         f *= 0.5
         fit = 1 - (f / normXSum)
         fitchange = abs(fitold - fit)
@@ -131,49 +128,49 @@ def asalsan(X, rank, **kwargs):
 
         if iters > 1 and fitchange < conv:
             break
-    return A, R, D, fit, iters, array(exectimes)
+    return A, R, D, fit, iters, np.array(exectimes)
 
 
 def __updateA(X, A, D, R, nne):
     rank = A.shape[1]
-    F = zeros((X[0].shape[0], rank))
-    E = zeros((rank, rank))
+    F = np.zeros((X[0].shape[0], rank))
+    E = np.zeros((rank, rank))
 
-    AtA = dot(A.T, A)
+    AtA = np.dot(A.T, A)
     for i in range(len(X)):
-        Dk = diag(D[i, :])
-        DRD = dot(Dk, dot(R, Dk))
+        Dk = np.diag(D[i, :])
+        DRD = np.dot(Dk, np.dot(R, Dk))
         DRtD = DRD.T
-        F += X[i].dot(dot(A, DRtD)) + X[i].T.dot(dot(A, DRD))
-        E += dot(DRD, dot(AtA, DRtD)) + dot(DRtD, dot(AtA, DRD))
+        F += X[i].np.dot(np.dot(A, DRtD)) + X[i].T.np.dot(np.dot(A, DRD))
+        E += np.dot(DRD, np.dot(AtA, DRtD)) + np.dot(DRtD, np.dot(AtA, DRD))
     if nne > 0:
-        E = dot(A, E) + nne
+        E = np.dot(A, E) + nne
         A = A * (F / E)
     else:
-        A = solve(E.T, F.T).T
+        A = np.linalg.solve(E.T, F.T).T
     return A
 
 
 def __updateR(X, A, D, R, nne):
     r = A.shape[1] ** 2
-    T = zeros((r, r))
-    t = zeros(r)
+    T = np.zeros((r, r))
+    t = np.zeros(r)
     for i in range(len(X)):
-        AD = dot(A, diag(D[i, :]))
+        AD = np.dot(A, np.diag(D[i, :]))
         ADt = AD.T
-        tmp = dot(ADt, AD)
-        T = T + kron(tmp, tmp)
-        tmp = dot(ADt, X[i].dot(AD))
+        tmp = np.dot(ADt, AD)
+        T = T + np.kron(tmp, tmp)
+        tmp = np.dot(ADt, X[i].dot(AD))
         t = t + tmp.flatten()
     r = A.shape[1]
     if nne > 0:
         Rflat = R.flatten()
-        T = dot(T, Rflat) + nne
+        T = np.dot(T, Rflat) + nne
         R = (Rflat * t / T).reshape(r, r)
     else:
         # TODO check if this is correct
-        R = solve(T, t).reshape(r, r)
-        #R = (pinv(T + eye(r ** 2)).dot(t)).reshape(r, r)
+        R = np.linalg.solve(T, t).reshape(r, r)
+        #R = (pinv(T + np.eye(r ** 2)).np.dot(t)).reshape(r, r)
     return R
 
 
@@ -215,13 +212,13 @@ class Updater:
 
     def precompute(self, x, cache=True):
         if not cache or self.x is None or (x != self.x).any():
-            self.AD = dot(self.A, diag(x))
+            self.AD = np.dot(self.A, np.diag(x))
             self.ADt = self.AD.T
-            self.E = self.Z - dot(self.AD, dot(self.R, self.ADt))
+            self.E = self.Z - np.dot(self.AD, np.dot(self.R, self.ADt))
 
     def updateD_F(self, x):
         self.precompute(x)
-        return norm(self.E, 'fro') ** 2
+        return np.linalg.norm(self.E, 'fro') ** 2
 
     def updateD_G(self, x):
         """
@@ -230,12 +227,12 @@ class Updater:
         See [2] for derivation of Gradient
         """
         self.precompute(x)
-        g = zeros(len(x))
-        Ai = zeros(self.A.shape[0])
+        g = np.zeros(len(x))
+        Ai = np.zeros(self.A.shape[0])
         for i in range(len(g)):
             Ai = self.A[:, i]
-            g[i] = (self.E * (dot(self.AD, outer(self.R[:, i], Ai)) +
-                    dot(outer(Ai, self.R[i, :]), self.ADt))).sum()
+            g[i] = (self.E * (np.dot(self.AD, np.outer(self.R[:, i], Ai)) +
+                    np.dot(np.outer(Ai, self.R[i, :]), self.ADt))).sum()
         return -2 * g
 
     def updateD_H(self, x):
@@ -245,27 +242,27 @@ class Updater:
         See [2] for derivation of Hessian
         """
         self.precompute(x)
-        H = zeros((len(x), len(x)))
-        Ai = zeros(self.A.shape[0])
-        Aj = zeros(Ai.shape)
+        H = np.zeros((len(x), len(x)))
+        Ai = np.zeros(self.A.shape[0])
+        Aj = np.zeros(Ai.shape)
         for i in range(len(x)):
             Ai = self.A[:, i]
-            ti = dot(self.AD, outer(self.R[:, i], Ai)) + dot(outer(Ai, self.R[i, :]), self.ADt)
+            ti = np.dot(self.AD, np.outer(self.R[:, i], Ai)) + np.dot(np.outer(Ai, self.R[i, :]), self.ADt)
 
             for j in range(i, len(x)):
                 Aj = self.A[:, j]
-                tj = outer(Ai, Aj)
+                tj = np.outer(Ai, Aj)
                 H[i, j] = (
                     self.E * (self.R[i, j] * tj + self.R[j, i] * tj.T) -
                     ti * (
-                        dot(self.AD, outer(self.R[:, j], Aj)) +
-                        dot(outer(Aj, self.R[j, :]), self.ADt)
+                        np.dot(self.AD, np.outer(self.R[:, j], Aj)) +
+                        np.dot(np.outer(Aj, self.R[j, :]), self.ADt)
                     )
                 ).sum()
                 H[j, i] = H[i, j]
         H *= -2
-        e = eigvals(H).min()
-        H = H + (eye(H.shape[0]) * e)
+        e = np.linalg.eigvals(H).min()
+        H = H + (np.eye(H.shape[0]) * e)
         return H
 
 

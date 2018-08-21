@@ -16,11 +16,9 @@
 
 import logging
 import time
-import numpy as np
-from numpy import array, ones, sqrt
-from numpy.random import rand
-from .core import ttm, nvecs, norm
 from numbers import Number
+import numpy as np
+from .core import ttm, nvecs, norm
 
 
 __all__ = [
@@ -89,7 +87,7 @@ def hooi(X, rank, **kwargs):
 
     ndims = X.ndim
     if isinstance(rank, Number):
-        rank = rank * ones(ndims)
+        rank = rank * np.ones(ndims)
 
     normX = norm(X)
 
@@ -108,7 +106,7 @@ def hooi(X, rank, **kwargs):
         core = ttm(Utilde, U, n, transp=True)
 
         # since factors are orthonormal, compute fit on core tensor
-        normresidual = sqrt(normX ** 2 - norm(core) ** 2)
+        normresidual = np.sqrt(normX ** 2 - norm(core) ** 2)
 
         # fraction explained by model
         fit = 1 - (normresidual / normX)
@@ -130,7 +128,7 @@ def hosvd(X, rank, dims=None, dtype=None, compute_core=True):
     if dtype is None:
         dtype = X.dtype
     for d in dims:
-        U[d] = array(nvecs(X, d, rank[d]), dtype=dtype)
+        U[d] = np.array(nvecs(X, d, rank[d]), dtype=dtype)
     if compute_core:
         core = X.ttm(U, transp=True)
         return U, core
@@ -145,7 +143,7 @@ def __init(init, X, N, rank, dtype):
         Uinit = init
     elif init == 'random':
         for n in range(1, N):
-            Uinit.append(array(rand(X.shape[n], rank[n]), dtype=dtype))
+            Uinit.append(np.array(np.random.rand(X.shape[n], rank[n]), dtype=dtype))
     elif init == 'nvecs':
         Uinit = hosvd(X, rank, range(1, N), dtype=dtype, compute_core=False)
     return Uinit

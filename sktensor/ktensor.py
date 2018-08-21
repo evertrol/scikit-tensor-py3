@@ -14,7 +14,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import numpy as np
-from numpy import dot, ones, array, outer, zeros, prod, sum
 from sktensor.core import khatrirao, tensor_mixin
 from sktensor.dtensor import dtensor
 
@@ -62,10 +61,10 @@ class ktensor(object):
         self.ndim = len(self.shape)
         self.rank = U[0].shape[1]
         self.lmbda = lmbda
-        if not all(array([Ui.shape[1] for Ui in U]) == self.rank):
+        if not all(np.array([Ui.shape[1] for Ui in U]) == self.rank):
             raise ValueError('Dimension mismatch of factor matrices')
         if lmbda is None:
-            self.lmbda = ones(self.rank)
+            self.lmbda = np.ones(self.rank)
 
     def __eq__(self, other):
         if isinstance(other, ktensor):
@@ -107,8 +106,8 @@ class ktensor(object):
             R = U[0].shape[1]
         W = np.tile(self.lmbda, 1, R)
         for i in range(mode) + range(mode + 1, N):
-            W = W * dot(self.U[i].T, U[i])
-        return dot(self.U[mode], W)
+            W = W * np.dot(self.U[i].T, U[i])
+        return np.dot(self.U[mode], W)
 
     def norm(self):
         """
@@ -120,9 +119,9 @@ class ktensor(object):
             Frobenius norm of the ktensor
         """
         N = len(self.shape)
-        coef = outer(self.lmbda, self.lmbda)
+        coef = np.outer(self.lmbda, self.lmbda)
         for i in range(N):
-            coef = coef * dot(self.U[i].T, self.U[i])
+            coef = coef * np.dot(self.U[i].T, self.U[i])
         return np.sqrt(coef.sum())
 
     def innerprod(self, X):
@@ -159,7 +158,7 @@ class ktensor(object):
             Fully computed multidimensional array whose shape matches
             the original ktensor.
         """
-        A = dot(self.lmbda, khatrirao(tuple(self.U)).T)
+        A = np.dot(self.lmbda, khatrirao(tuple(self.U)).T)
         return A.reshape(self.shape)
 
     def totensor(self):
@@ -175,10 +174,10 @@ class ktensor(object):
         return dtensor(self.toarray())
 
     def tovec(self):
-        v = zeros(sum([s * self.rank for s in self.shape]))
+        v = np.zeros(np.sum([s * self.rank for s in self.shape]))
         offset = 0
         for M in self.U:
-            noff = offset + prod(M.shape)
+            noff = offset + np.prod(M.shape)
             v[offset:noff] = M.flatten()
             offset = noff
         return vectorized_ktensor(v, self.shape, self.lmbda)
@@ -193,7 +192,7 @@ class vectorized_ktensor(object):
 
     def toktensor(self):
         order = len(self.shape)
-        rank = len(self.v) / sum(self.shape)
+        rank = len(self.v) / np.sum(self.shape)
         U = [None for _ in range(order)]
         offset = 0
         for i in range(order):

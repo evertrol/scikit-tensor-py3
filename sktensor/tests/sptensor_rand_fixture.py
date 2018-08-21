@@ -1,10 +1,10 @@
-from numpy.random import randint, seed
+import numpy as np
 import pytest
 
 
 @pytest.fixture
 def sptensor_seed():
-    return seed(5)
+    return np.random.seed(5)
 
 
 @pytest.fixture
@@ -14,7 +14,7 @@ def sz():
 
 @pytest.fixture
 def vals(sptensor_seed, sz):
-    return randint(0, 100, sz)
+    return np.random.randint(0, 100, sz)
 
 
 @pytest.fixture
@@ -24,4 +24,4 @@ def shape():
 
 @pytest.fixture
 def subs(sptensor_seed, shape, sz):
-    return tuple(randint(0, shape[i], sz) for i in range(len(shape)))
+    return tuple(np.random.randint(0, shape[i], sz) for i in range(len(shape)))

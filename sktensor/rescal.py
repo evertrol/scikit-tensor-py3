@@ -18,11 +18,10 @@
 import logging
 import time
 import numpy as np
-from numpy import dot, zeros, array, eye, kron, prod
 from numpy.linalg import norm, solve, inv, svd
 from scipy.sparse import csr_matrix, issparse
 from scipy.sparse.linalg import eigsh
-from numpy.random import rand
+
 
 __version__ = "0.5"
 __all__ = ['als']
@@ -133,7 +132,7 @@ def als(X, rank, **kwargs):
     if func_compute_fval is None:
         if orthogonalize:
             func_compute_fval = _compute_fval_orth
-        elif prod(X[0].shape) * len(X) > _DEF_NO_FIT:
+        elif np.prod(X[0].shape) * len(X) > _DEF_NO_FIT:
             _log.warn('For large tensors automatic computation of fit is disabled by default\nTo compute the fit, call rescal.als with "compute_fit=True"\nPlease note that this might cause memory and runtime problems')
             func_compute_fval = None
         else:
@@ -161,14 +160,14 @@ def als(X, rank, **kwargs):
     # ---------- initialize A ------------------------------------------------
     _log.debug('Initializing A')
     if ainit == 'random':
-        A = array(rand(n, rank), dtype=dtype)
+        A = np.array(np.random.rand(n, rank), dtype=dtype)
     elif ainit == 'nvecs':
         S = csr_matrix((n, n), dtype=dtype)
         for i in range(k):
             S = S + X[i]
             S = S + X[i].T
         _, A = eigsh(csr_matrix(S, dtype=dtype, shape=(n, n)), rank)
-        A = array(A, dtype=dtype)
+        A = np.array(A, dtype=dtype)
     else:
         raise ValueError('Unknown init option ("%s")' % ainit)
 
@@ -205,29 +204,29 @@ def als(X, rank, **kwargs):
         ))
         if itr > 0 and fitchange < conv:
             break
-    return A, R, f, itr + 1, array(exectimes)
+    return A, R, f, itr + 1, np.array(exectimes)
 
 
 # ------------------ Update A ------------------------------------------------
 def _updateA(X, A, R, P, Z, lmbdaA, orthogonalize):
     """Update step for A"""
     n, rank = A.shape
-    F = zeros((n, rank), dtype=A.dtype)
-    E = zeros((rank, rank), dtype=A.dtype)
+    F = np.zeros((n, rank), dtype=A.dtype)
+    E = np.zeros((rank, rank), dtype=A.dtype)
 
-    AtA = dot(A.T, A)
+    AtA = np.dot(A.T, A)
 
     for i in range(len(X)):
-        F += X[i].dot(dot(A, R[i].T)) + X[i].T.dot(dot(A, R[i]))
-        E += dot(R[i], dot(AtA, R[i].T)) + dot(R[i].T, dot(AtA, R[i]))
+        F += X[i].np.dot(np.dot(A, R[i].T)) + X[i].T.np.dot(np.dot(A, R[i]))
+        E += np.dot(R[i], np.dot(AtA, R[i].T)) + np.dot(R[i].T, np.dot(AtA, R[i]))
 
     # regularization
-    I = lmbdaA * eye(rank, dtype=A.dtype)
+    I = lmbdaA * np.eye(rank, dtype=A.dtype)
 
     # attributes
     for i in range(len(Z)):
         F += P[i].dot(Z[i].T)
-        E += dot(Z[i], Z[i].T)
+        E += np.dot(Z[i], Z[i].T)
 
     # finally compute update for A
     A = solve(I + E.T, F.T).T
@@ -238,12 +237,12 @@ def _updateA(X, A, R, P, Z, lmbdaA, orthogonalize):
 def _updateR(X, A, lmbdaR):
     rank = A.shape[1]
     U, S, Vt = svd(A, full_matrices=False)
-    Shat = kron(S, S)
+    Shat = np.kron(S, S)
     Shat = (Shat / (Shat ** 2 + lmbdaR)).reshape(rank, rank)
     R = []
     for i in range(len(X)):
-        Rn = Shat * dot(U.T, X[i].dot(U))
-        Rn = dot(Vt.T, dot(Rn, Vt))
+        Rn = Shat * np.dot(U.T, X[i].dot(U))
+        Rn = np.dot(Vt.T, np.dot(Rn, Vt))
         R.append(Rn)
     return R
 
@@ -254,13 +253,13 @@ def _updateZ(A, P, lmbdaZ):
     if len(P) == 0:
         return Z
     #_log.debug('Updating Z (Norm EQ, %d)' % len(P))
-    pinvAt = inv(dot(A.T, A) + lmbdaZ * eye(A.shape[1], dtype=A.dtype))
-    pinvAt = dot(pinvAt, A.T).T
+    pinvAt = inv(np.dot(A.T, A) + lmbdaZ * np.eye(A.shape[1], dtype=A.dtype))
+    pinvAt = np.dot(pinvAt, A.T).T
     for i in range(len(P)):
         if issparse(P[i]):
             Zn = P[i].tocoo().T.tocsr().dot(pinvAt).T
         else:
-            Zn = dot(pinvAt.T, P[i])
+            Zn = np.dot(pinvAt.T, P[i])
         Z.append(Zn)
     return Z
 
@@ -269,7 +268,7 @@ def _compute_fval(X, A, R, P, Z, lmbdaA, lmbdaR, lmbdaZ, normX):
     """Compute fit for full slices"""
     f = lmbdaA * norm(A) ** 2
     for i in range(len(X)):
-        ARAt = dot(A, dot(R[i], A.T))
+        ARAt = np.dot(A, np.dot(R[i], A.T))
         f += (norm(X[i] - ARAt) ** 2) / normX[i] + lmbdaR * norm(R[i]) ** 2
     return f
 
@@ -296,4 +295,4 @@ def sptensor_to_list(X):
 
 def orth(A):
     [U, _, Vt] = svd(A, full_matrices=0)
-    return dot(U, Vt)
+    return np.dot(U, Vt)

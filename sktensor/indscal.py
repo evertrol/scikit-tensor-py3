@@ -1,5 +1,4 @@
-from numpy import zeros, dot, diag
-from numpy.random import rand
+import numpy as np
 from scipy.linalg import svd, norm, orth
 from scipy.sparse.linalg import eigsh
 import time
@@ -32,7 +31,7 @@ def orth_als(X, ncomp, **kwargs):
         D = _updateD(X, A)
         A = _updateA(X, A, D)
 
-        fit = sum([norm(X[k] - dot(A, dot(diag(D[k, :]), A.T)))**2 for k in range(K)])
+        fit = sum([norm(X[k] - np.dot(A, np.dot(np.diag(D[k, :]), A.T)))**2 for k in range(K)])
         fit = 1 - fit / normX
         fitchange = abs(fitold - fit)
 
@@ -46,19 +45,19 @@ def orth_als(X, ncomp, **kwargs):
 
 
 def _updateA(X, A, D):
-    G = zeros(A.shape)
+    G = np.zeros(A.shape)
     for k in range(len(X)):
-        G = G + dot(X[k], dot(A, diag(D[k, :])))
+        G = G + np.dot(X[k], np.dot(A, np.diag(D[k, :])))
     U, _, Vt = svd(G, full_matrices=0)
-    A = dot(U, Vt)
+    A = np.dot(U, Vt)
     return A
 
 
 def _updateD(X, A):
     K, R = len(X), A.shape[1]
-    D = zeros((K, R))
+    D = np.zeros((K, R))
     for k in range(K):
-        D[k, :] = diag(dot(A.T, dot(X[k], A)))
+        D[k, :] = np.diag(np.dot(A.T, np.dot(X[k], A)))
     D[D < 0] = 0
     return D
 
@@ -66,9 +65,9 @@ def _updateD(X, A):
 def init(X, init, ncomp):
     N, K = X[0].shape[0], len(X)
     if init == 'random':
-        A = orth(rand(N, ncomp))
+        A = orth(np.random.rand(N, ncomp))
     elif init == 'nvecs':
-        S = zeros(N, N)
+        S = np.zeros(N, N)
         for k in range(K):
             S = S + X[k] + X[k].T
         _, A = eigsh(S, ncomp)

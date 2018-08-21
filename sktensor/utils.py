@@ -1,5 +1,4 @@
 import numpy as np
-from numpy import cumprod, array, arange, zeros, floor, lexsort
 
 
 def accum(subs, vals, func=np.sum, issorted=False, with_subs=False):
@@ -8,7 +7,7 @@ def accum(subs, vals, func=np.sum, issorted=False, with_subs=False):
     """
     # sort accmap for ediff if not sorted
     if not issorted:
-        sidx = lexsort(subs, axis=0)
+        sidx = np.lexsort(subs, axis=0)
         subs = [sub[sidx] for sub in subs]
         vals = vals[sidx]
     idx = np.where(np.diff(subs).any(axis=0))[0] + 1
@@ -28,11 +27,11 @@ def accum(subs, vals, func=np.sum, issorted=False, with_subs=False):
 
 def unravel_dimension(shape, idx):
     if isinstance(idx, type(1)):
-        idx = array([idx])
-    k = [1] + list(cumprod(shape[:-1]))
+        idx = np.array([idx])
+    k = [1] + list(np.cumprod(shape[:-1]))
     n = len(shape)
-    subs = zeros((len(idx), n), dtype=np.int)
-    for i in arange(n - 1, -1, -1):
-        subs[:, i] = floor(idx / k[i])
+    subs = np.zeros((len(idx), n), dtype=np.int)
+    for i in np.arange(n - 1, -1, -1):
+        subs[:, i] = np.floor(idx / k[i])
         idx = idx % k[i]
     return subs

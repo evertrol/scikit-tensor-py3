@@ -23,9 +23,7 @@ algorithms where
 import logging
 import time
 import numpy as np
-from numpy import array, dot, ones, sqrt
 from scipy.linalg import pinv
-from numpy.random import rand
 from .core import nvecs, norm
 from .ktensor import ktensor
 
@@ -141,13 +139,13 @@ def als(X, rank, **kwargs):
 
         for n in range(N):
             Unew = X.uttkrp(U, n)
-            Y = ones((rank, rank), dtype=dtype)
+            Y = np.ones((rank, rank), dtype=dtype)
             for i in (list(range(n)) + list(range(n + 1, N))):
-                Y = Y * dot(U[i].T, U[i])
+                Y = Y * np.dot(U[i].T, U[i])
             Unew = Unew.dot(pinv(Y))
             # Normalize
             if itr == 0:
-                lmbda = sqrt((Unew ** 2).sum(axis=0))
+                lmbda = np.sqrt((Unew ** 2).sum(axis=0))
             else:
                 lmbda = Unew.max(axis=0)
                 lmbda[lmbda < 1] = 1
@@ -168,7 +166,7 @@ def als(X, rank, **kwargs):
         if itr > 0 and fitchange < conv:
             break
 
-    return P, fit, itr, array(exectimes)
+    return P, fit, itr, np.array(exectimes)
 
 
 def opt(X, rank, **kwargs):
@@ -196,10 +194,10 @@ def _init(init, X, N, rank, dtype):
         Uinit = init
     elif init == 'random':
         for n in range(1, N):
-            Uinit[n] = array(rand(X.shape[n], rank), dtype=dtype)
+            Uinit[n] = np.array(np.random.rand(X.shape[n], rank), dtype=dtype)
     elif init == 'nvecs':
         for n in range(1, N):
-            Uinit[n] = array(nvecs(X, n, rank), dtype=dtype)
+            Uinit[n] = np.array(nvecs(X, n, rank), dtype=dtype)
     else:
         raise 'Unknown option (init=%s)' % str(init)
     return Uinit

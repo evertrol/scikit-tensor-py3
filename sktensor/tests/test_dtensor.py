@@ -1,12 +1,11 @@
-from numpy import array
-from numpy.random import randn
+import numpy as np
 from sktensor.dtensor import dtensor
 from .ttm_fixture import T, U, Y
 
 
 def test_new():
     sz = (10, 23, 5)
-    A = randn(*sz)
+    A = np.random.randn(*sz)
     T = dtensor(A)
     assert A.ndim == T.ndim
     assert A.shape == T.shape
@@ -35,12 +34,12 @@ def test_dense_fold(T):
     U = X.unfold(2)
     assert (2, 12) == U.shape
     for k in range(U.shape[1]):
-        assert (U[:, k] == array([X1.flatten('F')[k], X2.flatten('F')[k]])).all()
+        assert (U[:, k] == np.array([X1.flatten('F')[k], X2.flatten('F')[k]])).all()
 
 
 def test_dtensor_fold_unfold():
     sz = (10, 35, 3, 12)
-    X = dtensor(randn(*sz))
+    X = dtensor(np.random.randn(*sz))
     for i in range(4):
         U = X.unfold(i).fold()
         assert (X == U).all()
