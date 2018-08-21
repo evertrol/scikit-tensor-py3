@@ -1,11 +1,11 @@
 #!/usr/bin/env python
-descr = """Python module for multilinear algebra and tensor factorizations"""
+"""Python module for multilinear algebra and tensor factorizations"""
 
 import os
 import sys
 
 DISTNAME = 'scikit-tensor'
-DESCRIPTION = descr
+DESCRIPTION = """Python module for multilinear algebra and tensor factorizations"""
 with open(os.path.join(os.path.dirname(__file__), 'README.md')) as f:
     LONG_DESCRIPTION = f.read()
 MAINTAINER = 'Maximilian Nickel',
