@@ -122,10 +122,6 @@ class tensor_mixin(object):
         remdims = np.setdiff1d(range(self.ndim), dims)
         return self._ttv_compute(v, dims, vidx, remdims)
 
-    #@abc.abstractmethod
-    #def ttt(self, other, modes=None):
-    #    pass
-
     @abc.abstractmethod
     def _ttm_compute(self, V, mode, transp):
         pass
@@ -281,7 +277,6 @@ def nvecs(X, n, rank, do_flipsign=True, dtype=np.float):
         Y = Xn.dot(Xn.T)
         N = Y.shape[0]
         _, U = eigh(Y, eigvals=(N - rank, N - 1))
-        #_, U = eigsh(Y, rank, which='LM')
     # reverse order of eigenvectors such that eigenvalues are decreasing
     U = np.array(U[:, ::-1])
     # flip sign
@@ -393,13 +388,5 @@ def tvecmat(m, n):
     Tmn = np.zeros((d, d))
     Tmn[np.arange(d), i2] = 1
     return Tmn
-
-    #i = np.arange(d);
-    #rI = m * (i-1)-(m*n-1) * floor((i-1)/n)
-    #print rI
-    #I1s = s2i((d,d), rI, np.arange(d))
-    #print I1s
-    #Tmn[I1s] = 1
-    #return Tmn.reshape((d,d)).T
 
 # vim: set et:

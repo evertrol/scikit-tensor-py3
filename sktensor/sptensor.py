@@ -214,7 +214,6 @@ class sptensor(tensor_mixin):
     @inherit_docstring_from(tensor_mixin)
     def uttkrp(self, U, mode):
         R = U[1].shape[1] if mode == 0 else U[0].shape[1]
-        #dims = list(range(0, mode)) + list(range(mode + 1, self.ndim))
         dims = from_to_without(0, self.ndim, mode)
         V = np.zeros((self.shape[mode], R))
         for r in range(R):

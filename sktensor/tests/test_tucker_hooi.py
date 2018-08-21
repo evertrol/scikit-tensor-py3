@@ -3,8 +3,6 @@ from sktensor import tucker
 from sktensor.core import ttm
 from sktensor.dtensor import dtensor, unfolded_dtensor
 from sktensor.sptensor import unfolded_sptensor
-#from sktensor.rotation import orthomax
-
 
 
 def normalize(X):

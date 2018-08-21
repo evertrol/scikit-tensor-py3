@@ -93,7 +93,6 @@ def asalsan(X, rank, **kwargs):
         Xflat = [M.flatten() for M in X]
     M = np.zeros((n, n))
     normXSum = sum(normX)
-    #normX = np.linalg.norm(X)**2
     fit = fitold = f = fitchange = 0
     exectimes = []
     for iters in range(maxIter):
@@ -170,7 +169,6 @@ def __updateR(X, A, D, R, nne):
     else:
         # TODO check if this is correct
         R = np.linalg.solve(T, t).reshape(r, r)
-        #R = (pinv(T + np.eye(r ** 2)).np.dot(t)).reshape(r, r)
     return R
 
 

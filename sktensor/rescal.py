@@ -126,8 +126,6 @@ def als(X, rank, **kwargs):
             raise ValueError('Frontal slices of X must be matrices')
         if X[i].shape != sz:
             raise ValueError('Frontal slices of X must be all of same shape')
-        #if not issparse(X[i]):
-            #raise ValueError('X[%d] is not a sparse matrix' % i)
 
     if func_compute_fval is None:
         if orthogonalize:
