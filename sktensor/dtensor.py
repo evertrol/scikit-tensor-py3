@@ -57,8 +57,6 @@ class dtensor(tensor_mixin, np.ndarray):
     def _ttm_compute(self, V, mode, transp):
         sz = np.array(self.shape)
         r1, r2 = from_to_without(0, self.ndim, mode, separate=True)
-        #r1 = list(range(0, mode))
-        #r2 = list(range(mode + 1, self.ndim))
         order = [mode] + r1 + r2
         newT = self.transpose(axes=order)
         newT = newT.reshape(sz[mode], np.prod(sz[r1 + list(range(mode + 1, len(sz)))]))
