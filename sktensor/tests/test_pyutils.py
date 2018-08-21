@@ -1,4 +1,4 @@
-from sktensor.pyutils import *
+from sktensor.pyutils import from_to_without
 
 
 def test_from_to_without():

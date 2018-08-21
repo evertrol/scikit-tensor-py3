@@ -1,5 +1,5 @@
 import numpy as np
-from sktensor.core import *
+from sktensor.core import check_multiplication_dims, khatrirao
 from sktensor import dtensor, sptensor, ktensor
 from .ttm_fixture import T, U, Y
 from .sptensor_fixture import shape, vals, subs

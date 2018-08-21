@@ -13,15 +13,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
+import types
+import abc
+from collections.abc import Sequence
 import numpy as np
 from scipy.linalg import eigh
 from scipy.sparse import issparse as issparse_mat
 from scipy.sparse import csr_matrix
 from scipy.sparse.linalg import eigsh
-import sys
-import types
-import abc
-from collections.abc import Sequence
 
 module_funs = []
 
