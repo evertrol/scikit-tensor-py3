@@ -74,7 +74,7 @@ def hooi(X, rank, **kwargs):
     References
     ----------
     .. [1] L. De Lathauwer, B. De Moor, J. Vandewalle: On the best rank-1 and
-           rank-(R_1, R_2, \ldots, R_N) approximation of higher order tensors;
+           rank-(R_1, R_2, ..., R_N) approximation of higher order tensors;
            IEEE Trans. Signal Process. 49 (2001), pp. 2262-2271
     """
     # init options
