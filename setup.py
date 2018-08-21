@@ -87,9 +87,7 @@ def setup_package():
         install_requires=[
             'numpy',
             'scipy',
-            'nose'
         ],
-        #test_suite="nose.collector",
         **EXTRA_INFO
     )
 
