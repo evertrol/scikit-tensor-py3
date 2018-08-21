@@ -19,8 +19,9 @@ import time
 import numpy as np
 from numpy import array, ones, sqrt
 from numpy.random import rand
-from .pyutils import is_number
 from .core import ttm, nvecs, norm
+from numbers import Number
+
 
 __all__ = [
     'hooi',
@@ -87,7 +88,7 @@ def hooi(X, rank, **kwargs):
         raise ValueError('Unknown keywords (%s)' % (kwargs.keys()))
 
     ndims = X.ndim
-    if is_number(rank):
+    if isinstance(rank, Number):
         rank = rank * ones(ndims)
 
     normX = norm(X)

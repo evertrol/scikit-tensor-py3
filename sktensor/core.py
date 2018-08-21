@@ -21,17 +21,17 @@ from scipy.sparse import issparse as issparse_mat
 from scipy.sparse import csr_matrix
 from scipy.sparse.linalg import eigsh
 from abc import ABCMeta, abstractmethod
-from .pyutils import is_sequence, func_attr
 #from coremod import khatrirao
 
 import sys
 import types
+from collections.abc import Sequence
 
 module_funs = []
 
 
 def modulefunction(func):
-    module_funs.append(func_attr(func, 'name'))
+    module_funs.append(func.__name__)
 
 
 class tensor_mixin(object):
@@ -95,7 +95,7 @@ class tensor_mixin(object):
             mode = range(self.ndim)
         if isinstance(V, np.ndarray):
             Y = self._ttm_compute(V, mode, transp)
-        elif is_sequence(V):
+        elif isinstance(V, Sequence):
             dims, vidx = check_multiplication_dims(mode, self.ndim, len(V), vidx=True, without=without)
             Y = self._ttm_compute(V[vidx[0]], dims[0], transp)
             for i in range(1, len(dims)):
@@ -225,7 +225,7 @@ for fname in conv_funcs:
         return func(*args, **kwargs)
 
     nfunc = types.FunctionType(
-        func_attr(call_on_me, 'code'),
+        call_on_me.__code__,
         {
             'getattr': getattr,
             'fname': fname,
@@ -234,8 +234,8 @@ for fname in conv_funcs:
             'type': type
         },
         name=fname,
-        argdefs=func_attr(call_on_me, 'defaults'),
-        closure=func_attr(call_on_me, 'closure')
+        argdefs=call_on_me.__defaults__,
+        closure=call_on_me.__closure__
     )
     setattr(sys.modules[__name__], fname, nfunc)
 
