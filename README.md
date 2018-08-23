@@ -1,5 +1,5 @@
 # scikit-tensor
-![Travis CI](https://travis-ci.org/mnick/scikit-tensor.svg?branch=master)
+![Travis CI](https://travis-ci.org/evertrol/scikit-tensor-py3.svg?branch=master)
 
 scikit-tensor is a Python module for multilinear algebra and tensor
 factorizations. Currently, scikit-tensor supports basic tensor operations
@@ -14,10 +14,19 @@ well as the following tensor factorizations:
 
 Moreover, all operations support dense and tensors.
 
-#### Dependencies
-The required dependencies to build the software are `Numpy >= 1.3`, `SciPy >= 0.7`.
+## Note
 
-#### Usage
+This is a Python 3 only compatible maintenance release. It appears the
+development for scikit-tensor has stalled, and the project has been
+abondoned. This fork only supports Python 3.4 and later, and is
+available on PyPI as `scikit-tensor-py3`, for easier installation.
+
+Issues and pull requests are welcomed, but issues relating algorithms and requests for additional algorithms may be postponed or ignored altogether. Technical (code) issues are welcomed.
+
+## Dependencies
+The required dependencies to build the software are `Numpy` and `SciPy`.
+
+## Usage
 Example script to decompose sensory bread data (available from http://www.models.life.ku.dk/datasets) using CP-ALS
 
 ```python
@@ -36,30 +45,34 @@ T = dtensor(mat['X'])
 P, fit, itr, exectimes = cp_als(T, 3, init='random')
 ```
 
-#### Install
+## Installation
+
 This package uses distutils, which is the default way of installing python modules. The use of virtual environments is recommended.
 
-    pip install scikit-tensor
+    pip install scikit-tensor-py3
 
 To install in development mode
 
-    git clone git@github.com:mnick/scikit-tensor.git
-    pip install -e scikit-tensor/
+    git clone https://github.com/evertrol/scikit-tensor-py3.git
+    pip install -e scikit-tensor
 
-#### Contributing & Development
-scikit-tensor is still an extremely young project, and I'm happy for any contributions (patches, code, bugfixes, *documentation*, whatever) to get it to a stable and useful point. Feel free to get in touch with me via email (mnick at AT mit DOT edu) or directly via github.
+## Contributing & Development
 
-Development is synchronized via git. To clone this repository, run
+scikit-tensor is still an extremely young project, and I'm happy for any contributions (patches, code, bugfixes, *documentation*, whatever) to get it to a stable and useful point. Feel free to get in touch with me via email (mnick at AT mit DOT edu) or directly via github. See also the note above.
 
-    git clone git://github.com/mnick/scikit-tensor.git
+Development is synchronized via git. Feel free to fork this project and make pull requests from that fork.
 
-#### Authors
-Maximilian Nickel: [Web](http://web.mit.edu/~mnick/www), [Email](mailto://mnick AT mit DOT edu), [Twitter](http://twitter.com/mnick)
+## Authors
 
-#### License
-scikit-tensor is licensed under the [GPLv3](http://www.gnu.org/licenses/gpl-3.0.txt)
+- Maximilian Nickel: [Web](http://web.mit.edu/~mnick/www), [Email](mailto://mnick AT mit DOT edu), [Twitter](http://twitter.com/mnick)
+- Evert Rol (maintenance for Python 3 version): [Email](mailto:evert.rol@gmail.com)
 
-#### Related Projects
+## License
+
+scikit-tensor-py3 is licensed under the [GPLv3](http://www.gnu.org/licenses/gpl-3.0.txt)
+
+## Related Projects
+
 * [Matlab Tensor Toolbox](http://www.sandia.gov/~tgkolda/TensorToolbox/index-2.5.html):
   A Matlab toolbox for tensor factorizations and tensor operations freely available for research and evaluation.
 * [Matlab Tensorlab](http://www.tensorlab.net/)
