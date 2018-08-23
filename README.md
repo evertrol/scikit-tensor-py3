@@ -1,16 +1,16 @@
 # scikit-tensor
 ![Travis CI](https://travis-ci.org/mnick/scikit-tensor.svg?branch=master)
 
-scikit-tensor is a Python module for multilinear algebra and tensor 
-factorizations. Currently, scikit-tensor supports basic tensor operations 
-such as folding/unfolding, tensor-matrix and tensor-vector products as 
+scikit-tensor is a Python module for multilinear algebra and tensor
+factorizations. Currently, scikit-tensor supports basic tensor operations
+such as folding/unfolding, tensor-matrix and tensor-vector products as
 well as the following tensor factorizations:
 
 * Canonical / Parafac Decomposition
 * Tucker Decomposition
 * RESCAL
-* DEDICOM 
-* INDSCAL 
+* DEDICOM
+* INDSCAL
 
 Moreover, all operations support dense and tensors.
 
@@ -60,7 +60,7 @@ Maximilian Nickel: [Web](http://web.mit.edu/~mnick/www), [Email](mailto://mnick 
 scikit-tensor is licensed under the [GPLv3](http://www.gnu.org/licenses/gpl-3.0.txt)
 
 #### Related Projects
-* [Matlab Tensor Toolbox](http://www.sandia.gov/~tgkolda/TensorToolbox/index-2.5.html): 
+* [Matlab Tensor Toolbox](http://www.sandia.gov/~tgkolda/TensorToolbox/index-2.5.html):
   A Matlab toolbox for tensor factorizations and tensor operations freely available for research and evaluation.
 * [Matlab Tensorlab](http://www.tensorlab.net/)
   A Matlab toolbox for tensor factorizations, complex optimization, and tensor optimization freely available for
