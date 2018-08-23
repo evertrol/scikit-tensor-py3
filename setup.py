@@ -83,12 +83,11 @@ def setup_package():
         download_url=DOWNLOAD_URL,
         long_description=LONG_DESCRIPTION,
         version=get_version(),
+        python_requires=">=3.4",
         install_requires=[
             'numpy',
             'scipy',
-            'nose'
         ],
-        #test_suite="nose.collector",
         **EXTRA_INFO
     )
 
