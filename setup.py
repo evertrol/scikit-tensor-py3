@@ -8,9 +8,9 @@ DISTNAME = 'scikit-tensor3'
 DESCRIPTION = """Python module for multilinear algebra and tensor factorizations"""
 with open(os.path.join(os.path.dirname(__file__), 'README.md')) as f:
     LONG_DESCRIPTION = f.read()
-MAINTAINER = 'Maximilian Nickel', 'Evert Rol'
-MAINTAINER_EMAIL = 'mnick@mit.edu', 'evert.rol@gmail.com'
-URL = 'http://github.com/evertrol/scikit-tensor3'
+MAINTAINER = 'Evert Rol'
+MAINTAINER_EMAIL = 'evert.rol@gmail.com'
+URL = 'http://github.com/evertrol/scikit-tensor-py3'
 LICENSE = 'GPLv3'
 DOWNLOAD_URL = URL
 PACKAGE_NAME = 'sktensor'
