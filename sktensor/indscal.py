@@ -1,8 +1,8 @@
+import time
+import logging
 import numpy as np
 from scipy.linalg import svd, norm, orth
 from scipy.sparse.linalg import eigsh
-import time
-import logging
 
 _log = logging.getLogger('INDSCAL')
 

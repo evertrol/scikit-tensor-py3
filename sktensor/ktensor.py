@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import numpy as np
-from sktensor.core import khatrirao, tensor_mixin
+from sktensor.core import khatrirao
 from sktensor.dtensor import dtensor
 
 __all__ = [
@@ -23,7 +23,7 @@ __all__ = [
 ]
 
 
-class ktensor(object):
+class ktensor:
     """
     Tensor stored in decomposed form as a Kruskal operator.
 
@@ -183,7 +183,7 @@ class ktensor(object):
         return vectorized_ktensor(v, self.shape, self.lmbda)
 
 
-class vectorized_ktensor(object):
+class vectorized_ktensor:
 
     def __init__(self, v, shape, lmbda):
         self.v = v

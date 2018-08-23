@@ -13,15 +13,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
+import types
+import abc
+from collections.abc import Sequence
 import numpy as np
 from scipy.linalg import eigh
 from scipy.sparse import issparse as issparse_mat
 from scipy.sparse import csr_matrix
 from scipy.sparse.linalg import eigsh
-import sys
-import types
-import abc
-from collections.abc import Sequence
 
 module_funs = []
 
@@ -30,7 +30,7 @@ def modulefunction(func):
     module_funs.append(func.__name__)
 
 
-class tensor_mixin(object):
+class tensor_mixin:
     """
     Base tensor class from which all tensor classes are subclasses.
     Can not be instaniated
@@ -98,7 +98,7 @@ class tensor_mixin(object):
                 Y = Y._ttm_compute(V[vidx[i]], dims[i], transp)
         return Y
 
-    def ttv(self, v, modes=[], without=False):
+    def ttv(self, v, modes=None, without=False):
         """
         Tensor times vector product
 
@@ -113,6 +113,8 @@ class tensor_mixin(object):
             modes specified in ``modes``.
 
         """
+        if modes is None:
+            modes = []
         if not isinstance(v, tuple):
             v = (v, )
         dims, vidx = check_multiplication_dims(modes, self.ndim, len(v), vidx=True, without=without)
