@@ -1,5 +1,4 @@
-from numpy import array
-from numpy.random import randn
+import numpy as np
 from sktensor.core import *
 from sktensor import dtensor, sptensor, ktensor
 from .ttm_fixture import T, U, Y
@@ -15,17 +14,17 @@ def test_check_multiplication_dims():
 
 
 def test_khatrirao():
-    A = array([
+    A = np.array([
         [1, 2, 3],
         [4, 5, 6],
         [7, 8, 9]
     ])
-    B = array([
+    B = np.array([
         [1, 4, 7],
         [2, 5, 8],
         [3, 6, 9]
     ])
-    C = array([
+    C = np.array([
         [1, 8, 21],
         [2, 10, 24],
         [3, 12, 27],
@@ -63,12 +62,12 @@ def test_dense_fold(T):
     U = X.unfold(2)
     assert (2, 12) == U.shape
     for k in range(U.shape[1]):
-        assert (U[:, k] == array([X1.flatten('F')[k], X2.flatten('F')[k]])).all()
+        assert (U[:, k] == np.array([X1.flatten('F')[k], X2.flatten('F')[k]])).all()
 
 
 def test_dtensor_fold_unfold():
     sz = (10, 35, 3, 12)
-    X = dtensor(randn(*sz))
+    X = dtensor(np.random.randn(*sz))
     for i in range(4):
         U = X.unfold(i).fold()
         assert (X == U).all()
@@ -82,12 +81,8 @@ def test_dtensor_ttm(T, U, Y):
 
 
 def test_spttv(subs, vals, shape):
-    #subs = (
-    #    array([0, 1, 0, 5, 7, 8]),
-    #    array([2, 0, 4, 5, 3, 9]),
-    #    array([0, 1, 2, 2, 1, 0])
-    #)
-    #vals = array([1, 1, 1, 1, 1, 1])
     S = sptensor(subs, vals, shape=shape)
-    K = ktensor([randn(shape[0], 2), randn(shape[1], 2), randn(shape[2], 2)])
+    K = ktensor([np.random.randn(shape[0], 2),
+                 np.random.randn(shape[1], 2),
+                 np.random.randn(shape[2], 2)])
     K.innerprod(S)

@@ -15,8 +15,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import numpy as np
-from numpy import zeros, ones, array, arange, copy, ravel_multi_index, unravel_index
-from numpy import setdiff1d, hstack, hsplit, vsplit, sort, prod, lexsort, unique, bincount
 from scipy.sparse import coo_matrix
 from scipy.sparse import issparse as issparse_mat
 from sktensor.core import tensor_mixin
@@ -71,12 +69,12 @@ class sptensor(tensor_mixin):
         if len(subs[0]) != len(vals):
             raise ValueError('Subscripts and values must be of equal length')
         if dtype is None:
-            dtype = array(vals).dtype
+            dtype = np.array(vals).dtype
         for i in range(len(subs)):
-            if array(subs[i]).dtype.kind != 'i':
+            if np.array(subs[i]).dtype.kind != 'i':
                 raise ValueError('Subscripts must be integers')
 
-        vals = array(vals, dtype=dtype)
+        vals = np.array(vals, dtype=dtype)
         if accumfun is not None:
             vals, subs = accum(
                 subs, vals,
@@ -89,7 +87,7 @@ class sptensor(tensor_mixin):
         self.accumfun = accumfun
 
         if shape is None:
-            self.shape = tuple(array(subs).max(axis=1).flatten() + 1)
+            self.shape = tuple(np.array(subs).max(axis=1).flatten() + 1)
         else:
             self.shape = tuple(int(d) for d in shape)
         self.ndim = len(subs)
@@ -98,7 +96,7 @@ class sptensor(tensor_mixin):
         if isinstance(other, sptensor):
             self._sort()
             other._sort()
-            return (self.vals == other.vals).all() and (array(self.subs) == array(other.subs)).all()
+            return (self.vals == other.vals).all() and (np.array(self.subs) == np.array(other.subs)).all()
         elif isinstance(other, np.ndarray):
             return (self.toarray() == other).all()
         else:
@@ -108,7 +106,7 @@ class sptensor(tensor_mixin):
         # TODO check performance
         if len(idx) != self.ndim:
             raise ValueError('subscripts must be complete')
-        sidx = ones(len(self.vals))
+        sidx = np.ones(len(self.vals))
         for i in range(self.ndim):
             sidx = np.logical_and(self.subs[i] == idx[i], sidx)
         vals = self.vals[sidx]
@@ -130,9 +128,9 @@ class sptensor(tensor_mixin):
 
     def _sort(self):
         # TODO check performance
-        subs = array(self.subs)
-        sidx = lexsort(subs)
-        self.subs = tuple(z.flatten()[sidx] for z in vsplit(subs, len(self.shape)))
+        subs = np.array(self.subs)
+        sidx = np.lexsort(subs)
+        self.subs = tuple(z.flatten()[sidx] for z in np.vsplit(subs, len(self.shape)))
         self.vals = self.vals[sidx]
         self.issorted = True
 
@@ -141,7 +139,7 @@ class sptensor(tensor_mixin):
         if transp:
             V = V.T
         Z = Z.dot(V.T)
-        shape = copy(self.shape)
+        shape = np.copy(self.shape)
         shape[mode] = V.shape[0]
         if issparse_mat(Z):
             newT = unfolded_sptensor((Z.data, (Z.row, Z.col)), [mode], None, shape=shape).fold()
@@ -167,9 +165,9 @@ class sptensor(tensor_mixin):
 
         # Case 2: result is a vector
         if len(remdims) == 1:
-            usubs = unique(nsubs[0])
+            usubs = np.unique(nsubs[0])
             bins = usubs.searchsorted(nsubs[0])
-            c = bincount(bins, weights=nvals)
+            c = np.bincount(bins, weights=nvals)
             (nz,) = c.nonzero()
             return sptensor((usubs[nz],), c[nz], nshp)
 
@@ -187,28 +185,28 @@ class sptensor(tensor_mixin):
             shapeY[n] = V[n].shape[1] if transp else V[n].shape[0]
 
         # Allocate Y (final result) and v (vectors for elementwise computations)
-        Y = zeros(shapeY)
-        shapeY = array(shapeY)
+        Y = np.zeros(shapeY)
+        shapeY = np.array(shapeY)
         v = [None for _ in range(len(edims))]
 
         for i in range(np.prod(shapeY[edims])):
-            rsubs = unravel_index(shapeY[edims], i)
+            rsubs = np.unravel_index(shapeY[edims], i)
 
     def unfold(self, rdims, cdims=None, transp=False):
         if isinstance(rdims, type(1)):
             rdims = [rdims]
         if transp:
             cdims = rdims
-            rdims = setdiff1d(range(self.ndim), cdims)[::-1]
+            rdims = np.setdiff1d(range(self.ndim), cdims)[::-1]
         elif cdims is None:
-            cdims = setdiff1d(range(self.ndim), rdims)[::-1]
-        if not (arange(self.ndim) == sort(hstack((rdims, cdims)))).all():
+            cdims = np.setdiff1d(range(self.ndim), rdims)[::-1]
+        if not (np.arange(self.ndim) == np.sort(np.hstack((rdims, cdims)))).all():
             raise ValueError(
                 'Incorrect specification of dimensions (rdims: %s, cdims: %s)'
                 % (str(rdims), str(cdims))
             )
-        M = prod([self.shape[r] for r in rdims])
-        N = prod([self.shape[c] for c in cdims])
+        M = np.prod([self.shape[r] for r in rdims])
+        N = np.prod([self.shape[c] for c in cdims])
         ridx = _build_idx(self.subs, self.vals, rdims, self.shape)
         cidx = _build_idx(self.subs, self.vals, cdims, self.shape)
         return unfolded_sptensor((self.vals, (ridx, cidx)), (M, N), rdims, cdims, self.shape)
@@ -218,7 +216,7 @@ class sptensor(tensor_mixin):
         R = U[1].shape[1] if mode == 0 else U[0].shape[1]
         #dims = list(range(0, mode)) + list(range(mode + 1, self.ndim))
         dims = from_to_without(0, self.ndim, mode)
-        V = zeros((self.shape[mode], R))
+        V = np.zeros((self.shape[mode], R))
         for r in range(R):
             Z = tuple(U[n][:, r] for n in dims)
             TZ = self.ttv(Z, mode, without=True)
@@ -282,8 +280,8 @@ class sptensor(tensor_mixin):
         return np.linalg.norm(self.vals)
 
     def toarray(self):
-        A = zeros(self.shape)
-        A.put(ravel_multi_index(self.subs, tuple(self.shape)), self.vals)
+        A = np.zeros(self.shape)
+        A.put(np.ravel_multi_index(self.subs, tuple(self.shape)), self.vals)
         return A
 
 
@@ -327,11 +325,11 @@ class unfolded_sptensor(coo_matrix):
     """
 
     def __init__(self, tpl, shape, rdims, cdims, ten_shape, dtype=None, copy=False):
-        self.ten_shape = array(ten_shape)
+        self.ten_shape = np.array(ten_shape)
         if isinstance(rdims, int):
             rdims = [rdims]
         if cdims is None:
-            cdims = setdiff1d(range(len(self.ten_shape)), rdims)[::-1]
+            cdims = np.setdiff1d(range(len(self.ten_shape)), rdims)[::-1]
         self.rdims = rdims
         self.cdims = cdims
         super(unfolded_sptensor, self).__init__(tpl, shape=shape, dtype=dtype, copy=copy)
@@ -346,16 +344,16 @@ class unfolded_sptensor(coo_matrix):
         T : sptensor
             Sparse tensor that is created by refolding according to ``ten_shape``.
         """
-        nsubs = zeros((len(self.data), len(self.ten_shape)), dtype=np.int)
+        nsubs = np.zeros((len(self.data), len(self.ten_shape)), dtype=np.int)
         if len(self.rdims) > 0:
-            nidx = unravel_index(self.row, self.ten_shape[self.rdims])
+            nidx = np.unravel_index(self.row, self.ten_shape[self.rdims])
             for i in range(len(self.rdims)):
                 nsubs[:, self.rdims[i]] = nidx[i]
         if len(self.cdims) > 0:
-            nidx = unravel_index(self.col, self.ten_shape[self.cdims])
+            nidx = np.unravel_index(self.col, self.ten_shape[self.cdims])
             for i in range(len(self.cdims)):
                 nsubs[:, self.cdims[i]] = nidx[i]
-        nsubs = [z.flatten() for z in hsplit(nsubs, len(self.ten_shape))]
+        nsubs = [z.flatten() for z in np.hsplit(nsubs, len(self.ten_shape))]
         return sptensor(tuple(nsubs), self.data, self.ten_shape)
 
 
@@ -371,7 +369,7 @@ def _single_concatenate(ten, other, axis):
     oshape = other.shape
     if len(tshape) != len(oshape):
         raise ValueError("len(tshape) != len(oshape")
-    oaxes = setdiff1d(range(len(tshape)), [axis])
+    oaxes = np.setdiff1d(range(len(tshape)), [axis])
     for i in oaxes:
         if tshape[i] != oshape[i]:
             raise ValueError("Dimensions must match")
@@ -388,12 +386,12 @@ def _single_concatenate(ten, other, axis):
 
 
 def _build_idx(subs, vals, dims, tshape):
-    shape = array([tshape[d] for d in dims], ndmin=1)
-    dims = array(dims, ndmin=1)
+    shape = np.array([tshape[d] for d in dims], ndmin=1)
+    dims = np.array(dims, ndmin=1)
     if len(shape) == 0:
-        idx = ones(len(vals), dtype=vals.dtype)
+        idx = np.ones(len(vals), dtype=vals.dtype)
     elif len(subs) == 0:
-        idx = array(tuple())
+        idx = np.array(tuple())
     else:
-        idx = ravel_multi_index(tuple(subs[i] for i in dims), shape)
+        idx = np.ravel_multi_index(tuple(subs[i] for i in dims), shape)
     return idx

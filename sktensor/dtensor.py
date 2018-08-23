@@ -15,7 +15,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import numpy as np
-from numpy import array, prod, argsort
 from .core import tensor_mixin, khatrirao
 from .pyutils import inherit_docstring_from, from_to_without
 
@@ -56,13 +55,13 @@ class dtensor(tensor_mixin, np.ndarray):
         return np.equal(self, other)
 
     def _ttm_compute(self, V, mode, transp):
-        sz = array(self.shape)
+        sz = np.array(self.shape)
         r1, r2 = from_to_without(0, self.ndim, mode, separate=True)
         #r1 = list(range(0, mode))
         #r2 = list(range(mode + 1, self.ndim))
         order = [mode] + r1 + r2
         newT = self.transpose(axes=order)
-        newT = newT.reshape(sz[mode], prod(sz[r1 + list(range(mode + 1, len(sz)))]))
+        newT = newT.reshape(sz[mode], np.prod(sz[r1 + list(range(mode + 1, len(sz)))]))
         if transp:
             newT = V.T.dot(newT)
             p = V.shape[1]
@@ -72,7 +71,7 @@ class dtensor(tensor_mixin, np.ndarray):
         newsz = [p] + list(sz[:mode]) + list(sz[mode + 1:])
         newT = newT.reshape(newsz)
         # transpose + argsort(order) equals ipermute
-        newT = newT.transpose(argsort(order))
+        newT = newT.transpose(np.argsort(order))
         return dtensor(newT)
 
     def _ttv_compute(self, v, dims, vidx, remdims):
@@ -88,7 +87,7 @@ class dtensor(tensor_mixin, np.ndarray):
         order = list(remdims) + list(dims)
         if ndim > 1:
             T = self.transpose(order)
-        sz = array(self.shape)[order]
+        sz = np.array(self.shape)[order]
         for i in np.arange(len(dims), 0, -1):
             T = T.reshape((sz[:ndim - 1].prod(), sz[ndim - 1]))
             T = T.dot(v[vidx[i - 1]])
@@ -126,25 +125,25 @@ class dtensor(tensor_mixin, np.ndarray):
         Unfolding of dense tensors
 
         >>> T.unfold(0)
-        array([[  1.,   4.,   7.,  10.,  13.,  16.,  19.,  22.],
+        np.array([[  1.,   4.,   7.,  10.,  13.,  16.,  19.,  22.],
                [  2.,   5.,   8.,  11.,  14.,  17.,  20.,  23.],
                [  3.,   6.,   9.,  12.,  15.,  18.,  21.,  24.]])
         >>> T.unfold(1)
-        array([[  1.,   2.,   3.,  13.,  14.,  15.],
+        np.array([[  1.,   2.,   3.,  13.,  14.,  15.],
                [  4.,   5.,   6.,  16.,  17.,  18.],
                [  7.,   8.,   9.,  19.,  20.,  21.],
                [ 10.,  11.,  12.,  22.,  23.,  24.]])
         >>> T.unfold(2)
-        array([[  1.,   2.,   3.,   4.,   5.,   6.,   7.,   8.,   9.,  10.,  11.,
+        np.array([[  1.,   2.,   3.,   4.,   5.,   6.,   7.,   8.,   9.,  10.,  11.,
                  12.],
                [ 13.,  14.,  15.,  16.,  17.,  18.,  19.,  20.,  21.,  22.,  23.,
                  24.]])
         """
 
-        sz = array(self.shape)
+        sz = np.array(self.shape)
         N = len(sz)
         order = ([mode], from_to_without(N - 1, -1, mode, step=-1, skip=-1))
-        newsz = (sz[order[0]][0], prod(sz[order[1]]))
+        newsz = (sz[order[0]][0], np.prod(sz[order[1]]))
         arr = self.transpose(axes=(order[0] + order[1]))
         arr = arr.reshape(newsz)
         return unfolded_dtensor(arr, mode, self.shape)
@@ -168,7 +167,7 @@ class dtensor(tensor_mixin, np.ndarray):
 
     @inherit_docstring_from(tensor_mixin)
     def transpose(self, axes=None):
-        return dtensor(np.transpose(array(self), axes=axes))
+        return dtensor(np.transpose(np.array(self), axes=axes))
 
 
 class unfolded_dtensor(np.ndarray):
@@ -186,9 +185,9 @@ class unfolded_dtensor(np.ndarray):
         self.mode = getattr(obj, 'mode', None)
 
     def fold(self):
-        shape = array(self.ten_shape)
+        shape = np.array(self.ten_shape)
         N = len(shape)
         order = ([self.mode], from_to_without(0, N, self.mode, reverse=True))
         arr = self.reshape(tuple(shape[order[0]],) + tuple(shape[order[1]]))
-        arr = np.transpose(arr, argsort(order[0] + order[1]))
+        arr = np.transpose(arr, np.argsort(order[0] + order[1]))
         return dtensor(arr)
