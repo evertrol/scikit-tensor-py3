@@ -192,7 +192,7 @@ class vectorized_ktensor:
 
     def toktensor(self):
         order = len(self.shape)
-        rank = len(self.v) / np.sum(self.shape)
+        rank = len(self.v) // np.sum(self.shape)
         U = [None for _ in range(order)]
         offset = 0
         for i in range(order):
