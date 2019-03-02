@@ -215,7 +215,7 @@ def _updateA(X, A, R, P, Z, lmbdaA, orthogonalize):
     AtA = np.dot(A.T, A)
 
     for i in range(len(X)):
-        F += X[i].np.dot(np.dot(A, R[i].T)) + X[i].T.np.dot(np.dot(A, R[i]))
+        F += X[i].dot(np.dot(A, R[i].T)) + X[i].T.dot(np.dot(A, R[i]))
         E += np.dot(R[i], np.dot(AtA, R[i].T)) + np.dot(R[i].T, np.dot(AtA, R[i]))
 
     # regularization
