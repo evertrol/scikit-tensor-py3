@@ -16,7 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-import time
 import numpy as np
 from numpy.linalg import norm, solve, inv, svd
 from scipy.sparse import csr_matrix, issparse
@@ -82,14 +81,12 @@ def als(X, rank, **kwargs):
         function value of the factorization
     itr : int
         number of iterations until convergence
-    exectimes : ndarray
-        execution times to compute the updates in each iteration
 
     Examples
     --------
     >>> X1 = csr_matrix(([1,1,1], ([2,1,3], [0,2,3])), shape=(4, 4))
     >>> X2 = csr_matrix(([1,1,1,1], ([0,2,3,3], [0,1,2,3])), shape=(4, 4))
-    >>> A, R, fval, iter, exectimes = als([X1, X2], 2)
+    >>> A, R, fval, iter = als([X1, X2], 2)
 
     See
     ---
@@ -178,9 +175,7 @@ def als(X, rank, **kwargs):
 
     #  ------ compute factorization ------------------------------------------
     fit = fitchange = fitold = f = 0
-    exectimes = []
     for itr in range(maxIter):
-        tic = time.time()
         fitold = fit
         A = _updateA(X, A, R, P, Z, lmbdaA, orthogonalize)
         R = _updateR(X, A, lmbdaR)
@@ -194,15 +189,12 @@ def als(X, rank, **kwargs):
 
         fitchange = abs(fitold - fit)
 
-        toc = time.time()
-        exectimes.append(toc - tic)
-
-        _log.debug('[%3d] fval: %0.5f | delta: %7.1e | secs: %.5f' % (
-            itr, fit, fitchange, exectimes[-1]
+        _log.debug('[%3d] fval: %0.5f | delta: %7.1e' % (
+            itr, fit, fitchange
         ))
         if itr > 0 and fitchange < conv:
             break
-    return A, R, f, itr + 1, np.array(exectimes)
+    return A, R, f, itr + 1
 
 
 # ------------------ Update A ------------------------------------------------

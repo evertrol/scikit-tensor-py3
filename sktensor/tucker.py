@@ -15,7 +15,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-import time
 from numbers import Number
 import numpy as np
 from .core import ttm, nvecs, norm
@@ -100,9 +99,7 @@ def hooi(X, rank, **kwargs):
 
     U = __init(ainit, X, ndims, rank, dtype)
     fit = 0
-    exectimes = []
     for itr in range(maxIter):
-        tic = time.clock()
         fitold = fit
 
         for n in range(ndims):
@@ -118,11 +115,10 @@ def hooi(X, rank, **kwargs):
         # fraction explained by model
         fit = 1 - (normresidual / normX)
         fitchange = abs(fitold - fit)
-        exectimes.append(time.clock() - tic)
 
         _log.debug(
-            '[%3d] fit: %.5f | delta: %7.1e | secs: %.5f'
-            % (itr, fit, fitchange, exectimes[-1])
+            '[%3d] fit: %.5f | delta: %7.1e'
+            % (itr, fit, fitchange)
         )
         if itr > 1 and fitchange < conv:
             break
