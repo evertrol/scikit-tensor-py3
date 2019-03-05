@@ -143,7 +143,7 @@ class tensor_mixin:
     def uttkrp(self, U, mode):
         """
         Unfolded tensor times Khatri-Rao product:
-        :math:`M = \\unfold{X}{3} (U_1 \kr \cdots \kr U_N)`
+        :math:`M = (U_1 \\otimes \\cdots \\otimes U_N)`
 
         Computes the _matrix_ product of the unfolding
         of a tensor and the Khatri-Rao product of multiple matrices.

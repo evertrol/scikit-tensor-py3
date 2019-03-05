@@ -17,7 +17,7 @@
 This module holds diffent algorithms to compute the CP decomposition, i.e.
 algorithms where
 
-.. math:: \\ten{X} \\approx \sum_{r=1}^{rank} \\vec{u}_r^{(1)} \outer \cdots \outer \\vec{u}_r^{(N)}
+.. math:: X \\approx \\sum_{r=1}^{rank} \\vec{u}_r^{(1)} \\otimes \\cdots \\otimes \\vec{u}_r^{(N)}
 
 """
 import logging

@@ -149,7 +149,7 @@ class dtensor(tensor_mixin, np.ndarray):
     def norm(self):
         """
         Computes the Frobenius norm for dense tensors
-        :math:`norm(X) = \sqrt{\sum_{i_1,\ldots,i_N} x_{i_1,\ldots,i_N}^2}`
+        :math:`\\| X \\| = \\sqrt{\\sum_{i_1,\\ldots,i_N} x_{i_1,\\ldots,i_N}^2}`
 
         References
         ----------
