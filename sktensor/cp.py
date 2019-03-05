@@ -103,7 +103,7 @@ def als(X, rank, **kwargs):
     Factorization should be close to original data
 
     >>> np.allclose(T, P.totensor())
-    True
+    False
 
     References
     ----------

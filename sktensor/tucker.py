@@ -54,6 +54,7 @@ def hooi(X, rank, **kwargs):
     --------
     Create dense tensor
 
+    >>> from sktensor import dtensor
     >>> T = np.zeros((3, 4, 2))
     >>> T[:, :, 0] = [[ 1,  4,  7, 10], [ 2,  5,  8, 11], [3,  6,  9, 12]]
     >>> T[:, :, 1] = [[13, 16, 19, 22], [14, 17, 20, 23], [15, 18, 21, 24]]
@@ -66,10 +67,16 @@ def hooi(X, rank, **kwargs):
 
     Shape of the core tensor matches n-rank of the decomposition.
 
-    >>> Y['core'].shape
+    >>> Y[0].shape
     (2, 3, 1)
-    >>> Y['U'][1].shape
+    >>> len(Y[1])
+    3
+    >>> Y[1][0].shape
     (3, 2)
+    >>> Y[1][1].shape
+    (4, 3)
+    >>> Y[1][2].shape
+    (2, 1)
 
     References
     ----------

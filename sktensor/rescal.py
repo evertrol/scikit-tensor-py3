@@ -89,7 +89,7 @@ def als(X, rank, **kwargs):
     --------
     >>> X1 = csr_matrix(([1,1,1], ([2,1,3], [0,2,3])), shape=(4, 4))
     >>> X2 = csr_matrix(([1,1,1,1], ([0,2,3,3], [0,1,2,3])), shape=(4, 4))
-    >>> A, R, fval, iter, exectimes = rescal([X1, X2], 2)
+    >>> A, R, fval, iter, exectimes = als([X1, X2], 2)
 
     See
     ---
