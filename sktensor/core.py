@@ -79,6 +79,8 @@ class tensor_mixin:
 
         Multiply tensor with matrix along mode 0
 
+        >>> np.__version__
+        '1.16.2'
         >>> Y = T.ttm(V, 0)
         >>> Y[:, :, 0]
         dtensor([[ 22.,  49.,  76., 103.],

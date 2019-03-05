@@ -13,10 +13,9 @@ matrix:
 before_install:
     - sudo apt-get update -qq
     - sudo apt-get install -qq libatlas-dev libatlas-base-dev liblapack-dev gfortran
-    - if [[ $TRAVIS_PYTHON_VERSION == *"3."* ]]; then sudo apt-get install python3-numpy python3-scipy; fi
 install:
     - pip install -U pip wheel
-    - pip install numpy
+    - pip install 'numpy>=1.16'
     - pip install scipy nose pytest sphinx numpydoc sphinx-rtd-theme
     - pip install -e .
 script:
