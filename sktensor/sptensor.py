@@ -60,7 +60,7 @@ class sptensor(tensor_mixin):
     >>> S.shape
     (10, 20, 5)
     >>> S.dtype
-    <type 'float'>
+    <class 'float'>
     """
 
     def __init__(self, subs, vals, shape=None, dtype=None, accumfun=None, issorted=False):

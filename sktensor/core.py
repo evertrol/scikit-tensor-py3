@@ -67,6 +67,7 @@ class tensor_mixin:
         --------
         Create dense tensor
 
+        >>> from sktensor import dtensor
         >>> T = np.zeros((3, 4, 2))
         >>> T[:, :, 0] = [[ 1,  4,  7, 10], [ 2,  5,  8, 11], [3,  6,  9, 12]]
         >>> T[:, :, 1] = [[13, 16, 19, 22], [14, 17, 20, 23], [15, 18, 21, 24]]
@@ -80,11 +81,11 @@ class tensor_mixin:
 
         >>> Y = T.ttm(V, 0)
         >>> Y[:, :, 0]
-        np.array([[  22.,   49.,   76.,  103.],
-            [  28.,   64.,  100.,  136.]])
+        dtensor([[ 22.,  49.,  76., 103.],
+                 [ 28.,  64., 100., 136.]])
         >>> Y[:, :, 1]
-        np.array([[ 130.,  157.,  184.,  211.],
-            [ 172.,  208.,  244.,  280.]])
+        dtensor([[130., 157., 184., 211.],
+                 [172., 208., 244., 280.]])
 
         """
         if mode is None:
@@ -343,9 +344,9 @@ def khatrirao(A, reverse=False):
     >>> C.shape
     (20, 2)
     >>> (C[:, 0] == np.kron(A[:, 0], B[:, 0])).all()
-    true
+    True
     >>> (C[:, 1] == np.kron(A[:, 1], B[:, 1])).all()
-    true
+    True
     """
 
     if not isinstance(A, tuple):
