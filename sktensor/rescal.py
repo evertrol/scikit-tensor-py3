@@ -175,6 +175,7 @@ def als(X, rank, **kwargs):
 
     #  ------ compute factorization ------------------------------------------
     fit = fitchange = fitold = f = 0
+    X = [x.toarray() for x in X]
     for itr in range(maxIter):
         fitold = fit
         A = _updateA(X, A, R, P, Z, lmbdaA, orthogonalize)
