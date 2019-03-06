@@ -17,11 +17,10 @@
 This module holds diffent algorithms to compute the CP decomposition, i.e.
 algorithms where
 
-.. math:: \\ten{X} \\approx \sum_{r=1}^{rank} \\vec{u}_r^{(1)} \outer \cdots \outer \\vec{u}_r^{(N)}
+.. math:: X \\approx \\sum_{r=1}^{rank} \\vec{u}_r^{(1)} \\otimes \\cdots \\otimes \\vec{u}_r^{(N)}
 
 """
 import logging
-import time
 import numpy as np
 from scipy.linalg import pinv
 from .core import nvecs, norm
@@ -80,8 +79,6 @@ def als(X, rank, **kwargs):
         Fit of the factorization compared to ``X``
     itr : int
         Number of iterations that were needed until convergence
-    exectimes : ndarray of floats
-        Time needed for each single iteration
 
     Examples
     --------
@@ -93,7 +90,7 @@ def als(X, rank, **kwargs):
 
     Compute rank-3 CP decomposition of ``T`` with ALS
 
-    >>> P, fit, itr, _ = als(T, 3)
+    >>> P, fit, itr = als(T, 3)
 
     Result is a decomposed tensor stored as a Kruskal operator
 
@@ -132,9 +129,7 @@ def als(X, rank, **kwargs):
 
     U = _init(ainit, X, N, rank, dtype)
     fit = 0
-    exectimes = []
     for itr in range(maxiter):
-        tic = time.clock()
         fitold = fit
 
         for n in range(N):
@@ -158,15 +153,14 @@ def als(X, rank, **kwargs):
         else:
             fit = itr
         fitchange = abs(fitold - fit)
-        exectimes.append(time.clock() - tic)
         _log.debug(
-            '[%3d] fit: %.5f | delta: %7.1e | secs: %.5f' %
-            (itr, fit, fitchange, exectimes[-1])
+            '[%3d] fit: %.5f | delta: %7.1e' %
+            (itr, fit, fitchange)
         )
         if itr > 0 and fitchange < conv:
             break
 
-    return P, fit, itr, np.array(exectimes)
+    return P, fit, itr
 
 
 def opt(X, rank, **kwargs):
