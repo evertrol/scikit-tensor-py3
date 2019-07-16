@@ -374,19 +374,6 @@ def khatrirao(A, reverse=False):
     return P
 
 
-def teneye(dim, order):
-    """
-    Create tensor with superdiagonal all one, rest zeros
-    """
-    I = np.zeros(dim ** order)
-    for f in range(dim):
-        idd = f
-        for i in range(1, order):
-            idd = idd + dim ** (i - 1) * (f - 1)
-        I[idd] = 1
-    return I.reshape(np.ones(order) * dim)
-
-
 def tvecmat(m, n):
     d = m * n
     i2 = np.arange(d).reshape(m, n).T.flatten()
