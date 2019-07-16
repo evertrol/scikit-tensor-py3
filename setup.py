@@ -5,7 +5,7 @@ import os
 import sys
 
 DISTNAME = 'scikit-tensor-py3'
-VERSION = '0.4.0'
+VERSION = '0.4.1'
 DESCRIPTION = """Python module for multilinear algebra and tensor factorizations"""
 with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as f:
     LONG_DESCRIPTION = f.read()
