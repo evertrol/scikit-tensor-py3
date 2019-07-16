@@ -21,13 +21,18 @@ development for scikit-tensor has stalled, and the project has been
 abandoned. This fork only supports Python 3.5 and later, and is
 available on PyPI as `scikit-tensor-py3`, for easier installation.
 
-Issues and pull requests are welcomed, but issues relating algorithms and requests for additional algorithms may be postponed or ignored altogether. Technical (code) issues are welcomed.
+Issues and pull requests are welcomed, but issues relating algorithms
+and requests for additional algorithms may be postponed or ignored
+altogether. Technical (code) issues are welcomed.
 
 ## Dependencies
+
 The required dependencies to build the software are `Numpy` and `SciPy`.
 
 ## Usage
-Example script to decompose sensory bread data (available from http://www.models.life.ku.dk/datasets) using CP-ALS
+
+Example script to decompose sensory bread data (available from
+http://www.models.life.ku.dk/datasets) using CP-ALS
 
 ```python
 import logging
@@ -47,7 +52,8 @@ P, fit, itr, exectimes = cp_als(T, 3, init='random')
 
 ## Installation
 
-This package uses distutils, which is the default way of installing python modules. The use of virtual environments is recommended.
+This package uses distutils, which is the default way of installing
+python modules. The use of virtual environments is recommended.
 
     pip install scikit-tensor-py3
 
@@ -58,13 +64,20 @@ To install in development mode
 
 ## Contributing & Development
 
-scikit-tensor is still an extremely young project, and I'm happy for any contributions (patches, code, bugfixes, *documentation*, whatever) to get it to a stable and useful point. Feel free to get in touch with me via email (mnick at AT mit DOT edu) or directly via github. See also the note above.
+scikit-tensor is still an extremely young project, and I'm happy for
+any contributions (patches, code, bugfixes, *documentation*, whatever)
+to get it to a stable and useful point. Feel free to get in touch with
+me via email (mnick at AT mit DOT edu) or directly via github. See
+also the note above.
 
-Development is synchronized via git. Feel free to fork this project and make pull requests from that fork.
+Development is synchronized via git. Feel free to fork this project
+and make pull requests from that fork.
 
 ## Authors
 
-- Maximilian Nickel: [Web](http://web.mit.edu/~mnick/www), [Email](mailto://mnick AT mit DOT edu), [Twitter](http://twitter.com/mnick)
+- Maximilian Nickel: [Web](http://web.mit.edu/~mnick/www),
+  [Email](mailto://mnick AT mit DOT edu),
+  [Twitter](http://twitter.com/mnick)
 - Evert Rol (maintenance for Python 3 version): [Email](mailto:evert.rol@gmail.com)
 
 ## License
@@ -73,8 +86,11 @@ scikit-tensor-py3 is licensed under the [GPLv3](http://www.gnu.org/licenses/gpl-
 
 ## Related Projects
 
-* [Matlab Tensor Toolbox](http://www.sandia.gov/~tgkolda/TensorToolbox/index-2.5.html):
-  A Matlab toolbox for tensor factorizations and tensor operations freely available for research and evaluation.
-* [Matlab Tensorlab](http://www.tensorlab.net/)
-  A Matlab toolbox for tensor factorizations, complex optimization, and tensor optimization freely available for
-  non-commercial academic research.
+* [Matlab Tensor
+  Toolbox](http://www.sandia.gov/~tgkolda/TensorToolbox/index-2.5.html):
+  A Matlab toolbox for tensor factorizations and tensor operations
+  freely available for research and evaluation.
+
+* [Matlab Tensorlab](http://www.tensorlab.net/) A Matlab toolbox for
+  tensor factorizations, complex optimization, and tensor optimization
+  freely available for non-commercial academic research.
