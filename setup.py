@@ -5,6 +5,7 @@ import os
 import sys
 
 DISTNAME = 'scikit-tensor-py3'
+VERSION = '0.4.0'
 DESCRIPTION = """Python module for multilinear algebra and tensor factorizations"""
 with open(os.path.join(os.path.dirname(__file__), 'README.md')) as f:
     LONG_DESCRIPTION = f.read()
@@ -64,13 +65,6 @@ def configuration(parent_package='', top_path=None, package_name=DISTNAME):
     return config
 
 
-def get_version():
-    """Obtain the version number"""
-    import imp
-    mod = imp.load_source('version', os.path.join(PACKAGE_NAME, 'version.py'))
-    return mod.__version__
-
-
 def setup_package():
 # Call the setup function
     metadata = dict(
@@ -82,7 +76,7 @@ def setup_package():
         url=URL,
         download_url=DOWNLOAD_URL,
         long_description=LONG_DESCRIPTION,
-        version=get_version(),
+        version=VERSION,
         python_requires=">=3.4",
         install_requires=[
             'numpy==1.16.*',
@@ -105,7 +99,7 @@ def setup_package():
         except ImportError:
             from distutils.core import setup
 
-        metadata['version'] = get_version()
+        metadata['version'] = VERSION
     else:
         metadata['configuration'] = configuration
         from numpy.distutils.core import setup
