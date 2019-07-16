@@ -10,8 +10,7 @@ before_install:
     - sudo apt-get install -qq libatlas-dev libatlas-base-dev liblapack-dev gfortran
 install:
     - pip install -U pip wheel
-    - pip install 'numpy>=1.16'
-    - pip install scipy nose pytest sphinx numpydoc sphinx-rtd-theme
+    - pip install -r requirements-dev.txt
     - pip install -e .
 script:
     - python -m pytest --doctest-modules sktensor
