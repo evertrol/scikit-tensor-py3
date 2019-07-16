@@ -28,7 +28,6 @@ EXTRA_INFO = dict(
         'Operating System :: Unix',
         'Operating System :: MacOS',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
@@ -77,7 +76,7 @@ def setup_package():
         download_url=DOWNLOAD_URL,
         long_description=LONG_DESCRIPTION,
         version=VERSION,
-        python_requires=">=3.4",
+        python_requires=">=3.5",
         install_requires=[
             'numpy==1.16.*',
             'scipy==1.3.*',
