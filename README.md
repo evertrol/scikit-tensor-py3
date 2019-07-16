@@ -18,7 +18,7 @@ Moreover, all operations support dense and tensors.
 
 This is a Python 3 only compatible maintenance release. It appears the
 development for scikit-tensor has stalled, and the project has been
-abandoned. This fork only supports Python 3.4 and later, and is
+abandoned. This fork only supports Python 3.5 and later, and is
 available on PyPI as `scikit-tensor-py3`, for easier installation.
 
 Issues and pull requests are welcomed, but issues relating algorithms and requests for additional algorithms may be postponed or ignored altogether. Technical (code) issues are welcomed.
