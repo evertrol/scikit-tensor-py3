@@ -163,17 +163,18 @@ class tensor_mixin:
             Matrix which is the result of the matrix product of the unfolding of
             the tensor and the Khatri-Rao product of ``U``
 
-        See also
+        See Also
         --------
-        For efficient computations of unfolded tensor times Khatri-Rao products
-        for specialiized tensors see also
-        dtensor.uttkrp, sptensor.uttkrp, ktensor.uttkrp, ttensor.uttkrp
+        dtensor.uttkrp, sptensor.uttkrp, ktensor.uttkrp, ttensor.uttkrp : For
+            efficient computations of unfolded tensor times Khatri-Rao products
+            for specialiized tensors.
 
         References
         ----------
         .. [1] B.W. Bader, T.G. Kolda
                Efficient Matlab Computations With Sparse and Factored Tensors
                SIAM J. Sci. Comput, Vol 30, No. 1, pp. 205--231, 2007
+
         """
         pass
 
