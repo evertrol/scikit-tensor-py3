@@ -85,8 +85,8 @@ def setup_package():
         version=get_version(),
         python_requires=">=3.4",
         install_requires=[
-            'numpy',
-            'scipy',
+            'numpy==1.16.*',
+            'scipy==1.3.*',
         ],
         **EXTRA_INFO
     )
