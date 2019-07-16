@@ -33,7 +33,7 @@ def modulefunction(func):
 class tensor_mixin:
     """
     Base tensor class from which all tensor classes are subclasses.
-    Can not be instaniated
+    Can not be instantiated
 
     See also
     --------
