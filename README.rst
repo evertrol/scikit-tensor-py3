@@ -66,7 +66,7 @@ python modules. The use of virtual environments is recommended::
 To install in development mode::
 
     git clone https://github.com/evertrol/scikit-tensor-py3.git
-    pip install -e scikit-tensor
+    pip install -e scikit-tensor-py3
 
 Contributing & Development
 --------------------------
