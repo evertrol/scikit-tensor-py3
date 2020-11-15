@@ -8,3 +8,4 @@ docs/source/api
 .cache
 .eggs/
 venv/
+scikit_tensor_py3.egg-info/
