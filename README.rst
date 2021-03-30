@@ -1,3 +1,9 @@
+Note: this package is not maintained. It was mostly translated to
+Python 3 to enable installation of other packages that use
+scikit-tensor as a dependency. Please see if something like `TensorLy
+<https://pypi.org/project/tensorly/>`_ is a good alternative for your
+use case.
+
 scikit-tensor
 =============
 .. image:: https://travis-ci.org/evertrol/scikit-tensor-py3.svg?branch=master
